@@ -1,0 +1,47 @@
+form.form {
+    width: 100%;
+}
+
+button.b-btn {
+    border: 1px solid;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+button.b-btn:hover {
+    background: white;
+    color: black;
+    transition: 0.3s ease;
+}
+input[type="file"] {
+    cursor: pointer;
+}
+.input-sec {
+    margin: 20px 0;
+    width: 100%;
+}
+
+.mainblog-top-head {
+    width: 100%;
+}
+
+.input-sec input, textarea {
+    border-bottom: 1px solid;
+    margin-left: 5px;
+    width: 100%;
+}
+
+.input-sec input:focus-visible,
+textarea:focus-visible {
+    outline: none;
+}
+
+.error {
+    color: coral;
+    margin-top: 4px;
+}
+
+
+label {
+    width: 90px;
+}
