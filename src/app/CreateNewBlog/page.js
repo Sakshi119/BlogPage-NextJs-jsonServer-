@@ -1,15 +1,37 @@
 "use client";
-import React from 'react'
-import './CreateForm.css'
+import React, { useEffect, useState } from 'react'
+// import './CreateForm.css'
 import { useForm } from 'react-hook-form'
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 const CreateForm = () => {
     const { register, handleSubmit, reset,
         formState: { errors }
     } = useForm();
 
     const router = useRouter()
+    const searchParams = useSearchParams()
+
+    const blogId = searchParams.get("id");
+    console.log(blogId, "Blog ID");
+
+
+    const [editData, setEditData] = useState(null);
+
+    useEffect(() => {
+        if (blogId) {
+            axios.get(`http://localhost:5000/blogData/${blogId}`).then(res => {
+                setEditData(res.data);
+                console.log(res.data, "data");
+
+                reset({
+                    title: res.data.title,
+                    description: res.data.description,
+                    image: ""
+                })
+            })
+        }
+    }, [blogId, reset])
 
 
     const toBase64 = (file) => {
@@ -23,24 +45,40 @@ const CreateForm = () => {
 
     const onSubmit = async (data) => {
         try {
-            let base64Image = "";
+            let base64Image = editData?.image || "";
             if (data.image && data.image[0]) {
                 base64Image = await toBase64(data.image[0]);
             }
 
-            const newBlog = {
-                title: data.title,
-                description: data.description,
-                image: base64Image,
+
+            if (blogId) {
+                await axios.put(`http://localhost:5000/blogData/${blogId}`, {
+                    id: Number(blogId),
+                    title: data.title,
+                    description: data.description,
+                    image: base64Image
+                })
+                alert("Blog Updated Successfully")
+            } else {
+                const blogs = await axios.get("http://localhost:5000/blogData").then(res => res.data);
+                const nextId = blogs.length > 0 ? Math.max(...blogs.map(b => Number(b.id))) + 1 : 1;
+
+                const newBlog = {
+                    id: nextId,
+                    title: data.title,
+                    description: data.description,
+                    image: base64Image
+                };
+                await axios.post('http://localhost:5000/blogData', newBlog, {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                alert("Blog Created Successfully")
             }
-            await axios.post('http://localhost:5000/blogData', newBlog, {
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            })
-            alert("Blog Created Successfully")
+
             reset();
-            router.push("/")
+            router.push("/");
         } catch (e) {
             console.error(e);
         }
@@ -57,7 +95,7 @@ const CreateForm = () => {
                         <div className="mainblog-top-head">
                             <div className="flex flex-col">
                                 <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-                                    Create a New Blog
+                                    {blogId ? "Edit Blog" : "Create a New Blog"}
                                 </h1>
                                 <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
                                     What do you want to share?
@@ -97,7 +135,7 @@ const CreateForm = () => {
                                         {errors.description && <p className='error'>{errors.description.message}</p>}
                                     </div>
 
-                                    <button type='submit' className='b-btn'>Submit</button>
+                                    <button type='submit' className='b-btn'>{blogId? "Update" : "Submit"}</button>
                                 </form>
                             </div>
                         </div>

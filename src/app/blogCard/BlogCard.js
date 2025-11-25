@@ -1,16 +1,21 @@
 "use client";
-import './BlogCard.css'
+// import './BlogCard.css'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import { useRouter } from 'next/navigation';
 
 const BlogCard = () => {
     const [blogData, setBlogData] = useState([]);
+    const router = useRouter()
+
+
 
     useEffect(() => {
         getBlogData()
     }, [])
+
     const getBlogData = async () => {
         try {
             const response = await axios.get('http://localhost:5000/blogData');
@@ -21,14 +26,35 @@ const BlogCard = () => {
         }
     }
 
+    const handleEdit = (id) => {
+        router.push(`/CreateNewBlog?id=${id}`)
+    }
+
+    const handleDelete = async (id) => {
+        const confirmDelete = confirm("Are you sure you want to delete this blog?");
+        if (!confirmDelete) return;
+
+        try {
+            await axios.delete(`http://localhost:5000/blogData/${id}`)
+            alert("Blog deleted successfully")
+
+            setBlogData(prev => prev.filter(blog => blog.id !== id))
+        } catch (e) {
+            console.error(e, "error deleting the blog")
+            alert("Failed to delete the blog.");
+        }
+    }
 
     return (
         <>
             {blogData && blogData.map((data) => {
                 return (
                     <div className='blog-card' key={data.id}>
-                        <Link href={'/blogCard/${data.id}'}>
-                            <Image src={data.image} alt="img1" width={500} height={500}></Image>
+
+                        <span className='edit-btn' onClick={() => handleEdit(data.id)}>✏️</span>
+                        <span className='delete-btn' onClick={() => handleDelete(data.id)}>🗑️</span>
+                        <Image src={data.image} alt="img1" width={500} height={500}></Image>
+                        <Link href={`/blogCard/${data.id}`}>
                             <div className='blog-details'>
                                 <h3 className='blog-title'>{data.title}</h3>
                                 <p className='blog-summary'>{data.description}</p>
