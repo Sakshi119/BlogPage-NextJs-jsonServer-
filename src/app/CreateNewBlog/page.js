@@ -137,7 +137,7 @@ const CreateForm = () => {
 
                                     <button type='submit' className='b-btn'>{blogId? "Update" : "Submit"}</button>
                                 </form>
-                            </div>
+                            </div>  
                         </div>
 
                     </div>

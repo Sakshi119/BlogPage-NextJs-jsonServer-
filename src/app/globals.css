@@ -469,3 +469,10 @@ a {
 html {
   scroll-behavior: smooth;
 }
+
+/* deleting animation */
+.blog-card.deleting {
+  opacity: 0;
+  transform: scale(0.97);
+  transition: all 0.3s ease-in-out;
+}
