@@ -270,6 +270,7 @@ span.delete-btn {
   top: 1rem;
   left: 1rem;
 }
+
 .delete-btn:hover {
   background: rgba(139, 92, 246, 0.9);
   transform: rotate(15deg) scale(1.1);
@@ -475,4 +476,14 @@ html {
   opacity: 0;
   transform: scale(0.97);
   transition: all 0.3s ease-in-out;
+}
+
+.blogDetails span.back-btn {
+  font-size: 30px;
+  right: 0;
+  position: relative;
+  width: 100%;
+  display: block;
+  text-align: right;
+  cursor: pointer;
 }
