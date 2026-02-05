@@ -7,7 +7,18 @@ import { useRouter, useSearchParams } from "next/navigation";
 import './CreateForm.css'
 
 export default function CreateFormClient() {
-    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors }
+    } = useForm({
+        defaultValues: {
+            title: "",
+            description: ""
+        }
+    });
+
     const router = useRouter();
     const searchParams = useSearchParams();
     const blogId = searchParams.get("id");
@@ -15,17 +26,28 @@ export default function CreateFormClient() {
     const [editData, setEditData] = useState(null);
 
     useEffect(() => {
-        if (blogId) {
-            axios.get(`/api/blog?id=${blogId}`).then(res => {
+        if (!blogId) return;
+
+        const fetchBlog = async () => {
+            try {
+                const res = await axios.get(`/api/blog?id=${blogId}`);
+
+                if (!res.data) return;
+
                 setEditData(res.data);
+
                 reset({
-                    title: res.data.title,
-                    description: res.data.description,
-                    image: ""
+                    title: res.data.title || "",
+                    description: res.data.description || ""
                 });
-            });
-        }
+            } catch (err) {
+                console.error("Failed to load blog", err);
+            }
+        };
+
+        fetchBlog();
     }, [blogId, reset]);
+
 
     const toBase64 = (file) =>
         new Promise((resolve, reject) => {
@@ -74,9 +96,18 @@ export default function CreateFormClient() {
                 {blogId ? "Update Blog" : "Create New Blog"}
             </h2>
 
+
+
             <div className="input-sec">
                 <label>Cover Image</label>
                 <input type="file" {...register("image")} />
+
+                {editData?.image && (
+                    <div className="image-preview input-sec">
+                        <img src={editData.image} alt="Current cover" width="300" height="400" />
+                        <p className="preview-text">Current cover image</p>
+                    </div>
+                )}
             </div>
 
             <div className="input-sec">
