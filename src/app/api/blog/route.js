@@ -60,8 +60,37 @@ let blogs = [
 
 
 // GET
-export async function GET() {
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get("id");
+
+  if (id) {
+    const blog = blogs.find((b) => b.id === Number(id));
+    return NextResponse.json(blog || null);
+  }
+
   return NextResponse.json(blogs);
+}
+
+export async function PUT(request) {
+  const { searchParams } = new URL(request.url);
+  const id = Number(searchParams.get("id"));
+
+  const body = await request.json();
+
+  const index = blogs.findIndex(b => b.id === id);
+  if (index === -1) {
+    return NextResponse.json({ message: "Not found" }, { status: 404 });
+  }
+
+  blogs[index] = {
+    ...blogs[index],
+    title: body.title,
+    description: body.description,
+    image: body.image
+  };
+
+  return NextResponse.json(blogs[index]);
 }
 
 // POST
@@ -69,13 +98,34 @@ export async function POST(request) {
   const body = await request.json();
 
   const newBlog = {
-    id: blogs.length + 1, // number, not string
+    id: Date.now(), // ✅ UNIQUE
     title: body.title,
     description: body.description,
-    image: body.image
+    image: body.image,
   };
 
   blogs.push(newBlog);
 
   return NextResponse.json(newBlog, { status: 201 });
+}
+
+export async function DELETE(request) {
+  const { searchParams } = new URL(request.url);
+  const id = Number(searchParams.get("id"));
+
+  const index = blogs.findIndex((b) => b.id === id);
+
+  if (index === -1) {
+    return NextResponse.json(
+      { message: "Blog not found" },
+      { status: 404 }
+    );
+  }
+
+  blogs.splice(index, 1);
+
+  return NextResponse.json(
+    { message: "Blog deleted successfully" },
+    { status: 200 }
+  );
 }

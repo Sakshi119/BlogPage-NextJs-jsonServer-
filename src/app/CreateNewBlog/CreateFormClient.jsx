@@ -16,7 +16,7 @@ export default function CreateFormClient() {
 
     useEffect(() => {
         if (blogId) {
-            axios.get(`/api/blog/${blogId}`).then(res => {
+            axios.get(`/api/blog?id=${blogId}`).then(res => {
                 setEditData(res.data);
                 reset({
                     title: res.data.title,
@@ -42,7 +42,7 @@ export default function CreateFormClient() {
         }
 
         if (blogId) {
-            await axios.put(`/api/blog/${blogId}`, {
+            await axios.put(`/api/blog?id=${blogId}`, {
                 id: Number(blogId),
                 title: data.title,
                 description: data.description,
