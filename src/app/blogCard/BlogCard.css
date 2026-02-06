@@ -105,3 +105,10 @@ button.b-btn:hover {
         object-fit: cover;
     }
 }
+
+.blog-category {
+  font-size: 12px;
+  color: #777;
+  margin-bottom: 6px;
+  display: inline-block;
+}

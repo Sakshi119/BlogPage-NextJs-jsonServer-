@@ -7,83 +7,86 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
-const BlogCard = () => {
-  const [blogData, setBlogData] = useState([]);
-  const [deletingId, setDeletingId] = useState(null);
-  const router = useRouter();
+const BlogCard = ({searchQuery = ""}) => {
+    const [blogData, setBlogData] = useState([]);
+    const [deletingId, setDeletingId] = useState(null);
+    const router = useRouter();
 
-  useEffect(() => {
-    getBlogData();
-  }, []);
+    useEffect(() => {
+        getBlogData();
+    }, [searchQuery]);
 
-  const getBlogData = async () => {
-    try {
-      const res = await axios.get("/api/blog");
-      setBlogData(res.data);
-    } catch (e) {
-      console.error(e);
-      toast.error("Failed to load blogs");
-    }
-  };
+    const getBlogData = async () => {
+        try {
+            const res = await axios.get("/api/blog", {
+                params: { q: searchQuery }
+            });
+            setBlogData(res.data);
+        } catch (e) {
+            console.error(e);
+            toast.error("Failed to load blogs");
+        }
+    };
 
-  const handleEdit = (id) => {
-    router.push(`/CreateNewBlog?id=${id}`);
-  };
+    const handleEdit = (id) => {
+        router.push(`/CreateNewBlog?id=${id}`);
+    };
 
-  const handleDelete = async (id) => {
-    const confirmDelete = confirm("Are you sure you want to delete this blog?");
-    if (!confirmDelete) return;
+    const handleDelete = async (id) => {
+        const confirmDelete = confirm("Are you sure you want to delete this blog?");
+        if (!confirmDelete) return;
 
-    try {
-      setDeletingId(id);
+        try {
+            setDeletingId(id);
 
-      await axios.delete(`/api/blog?id=${id}`);
+            await axios.delete(`/api/blog?id=${id}`);
 
-      toast.success("Blog deleted successfully");
+            toast.success("Blog deleted successfully");
 
-      setTimeout(() => {
-        setBlogData((prev) => prev.filter((blog) => blog.id !== id));
-        setDeletingId(null);
-      }, 300);
-    } catch (e) {
-      console.error(e);
-      setDeletingId(null);
-      toast.error("Failed to delete the blog");
-    }
-  };
+            setTimeout(() => {
+                setBlogData((prev) => prev.filter((blog) => blog.id !== id));
+                setDeletingId(null);
+            }, 300);
+        } catch (e) {
+            console.error(e);
+            setDeletingId(null);
+            toast.error("Failed to delete the blog");
+        }
+    };
 
-  return (
-    <>
-      {blogData.map((data) => (
-        <div
-          key={data.id}
-          className={`blog-card ${deletingId === data.id ? "deleting" : ""}`}
-        >
-          <span className="edit-btn" onClick={() => handleEdit(data.id)}>
-            ✏️
-          </span>
+    return (
+        <>
+            {blogData.map((data) => (
+                <div
+                    key={data.id}
+                    className={`blog-card ${deletingId === data.id ? "deleting" : ""}`}
+                >
+                    <span className="edit-btn" onClick={() => handleEdit(data.id)}>
+                        ✏️
+                    </span>
 
-          <span className="delete-btn" onClick={() => handleDelete(data.id)}>
-            🗑️
-          </span>
+                    <span className="delete-btn" onClick={() => handleDelete(data.id)}>
+                        🗑️
+                    </span>
 
-          <Image
-            src={data.image}
-            alt={data.title}
-            width={500}
-            height={500}
-          />
+                    <Image
+                        src={data.image}
+                        alt={data.title}
+                        width={500}
+                        height={500}
+                    />
 
-          <Link href={`/blogCard/${data.id}`}>
-            <div className="blog-details">
-              <h3 className="blog-title">{data.title}</h3>
-              <p className="blog-summary">{data.description}</p>
-            </div>
-          </Link>
-        </div>
-      ))}
-    </>
-  );
+                    <Link href={`/blogCard/${data.id}`}>
+                        <div className="blog-details">
+                            <span className="blog-category">{data.category}</span>
+                            <h3 className="blog-title">{data.title}</h3>
+                            <p className="blog-summary">{data.description}</p>
+                        </div>
+                    </Link>
+                </div>
+            ))}
+        </>
+    );
 };
 
 export default BlogCard;

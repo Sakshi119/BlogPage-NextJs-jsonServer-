@@ -31,7 +31,9 @@ label {
 }
 
 .input-sec input,
-.input-sec textarea {
+.input-sec textarea,
+.input-sec select {
+    /* border: 1px solid #ccc; */
     padding: 10px 12px;
     border-radius: 8px;
     font-size: 14px;

@@ -68,6 +68,7 @@ export default function CreateFormClient() {
                 id: Number(blogId),
                 title: data.title,
                 description: data.description,
+                category: data.category,
                 image: base64Image
             });
             alert("Blog Updated");
@@ -80,12 +81,19 @@ export default function CreateFormClient() {
             await axios.post("/api/blog", {
                 title: data.title,
                 description: data.description,
+                category: data.category,
                 image: base64Image
             });
             alert("Blog Created");
         }
 
-        reset();
+        reset({
+            title: data.title,
+            description: data.description,
+            category: data.category,
+            image: ""
+        });
+
         router.push("/");
     };
 
@@ -95,6 +103,21 @@ export default function CreateFormClient() {
                 {blogId ? "Update Blog" : "Create New Blog"}
             </h2>
 
+            <div className="input-sec">
+                <label>Category</label>
+                <select {...register("category", { required: true })}>
+                    <option value="">Select category</option>
+                    <option value="Travel">Travel</option>
+                    <option value="Food">Food</option>
+                    <option value="Lifestyle">Lifestyle</option>
+                    <option value="Shopping">Shopping</option>
+                    <option value="Personal">Personal</option>
+                </select>
+
+                {errors.category && (
+                    <p className="error">Category is required</p>
+                )}
+            </div>
 
 
             <div className="input-sec">

@@ -385,7 +385,9 @@ span.delete-btn {
 
 .input-sec input[type="text"],
 .input-sec input[type="file"],
-.input-sec textarea {
+.input-sec textarea,
+.input-sec select,
+form.search-bar input {
   padding: 1rem 1.2rem;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -403,7 +405,9 @@ span.delete-btn {
 }
 
 .input-sec input:focus,
-.input-sec textarea:focus {
+.input-sec textarea:focus,
+.input-sec select:focus,
+form.search-bar input:focus {
   border-color: #8b5cf6;
   background: rgba(139, 92, 246, 0.05);
   box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
@@ -429,6 +433,19 @@ span.delete-btn {
   font-size: 1.1rem;
 }
 
+option {
+  background: black;
+}
+
+form.search-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-bottom: 50px;
+}
+form.search-bar input {
+    margin-right: 5px;
+}
 /* Responsive Design */
 @media (max-width: 768px) {
   h1 {
