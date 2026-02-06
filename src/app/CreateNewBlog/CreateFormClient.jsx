@@ -72,13 +72,12 @@ export default function CreateFormClient() {
             });
             alert("Blog Updated");
         } else {
-            const blogs = await axios.get("/api/blog").then(res => res.data);
-            const nextId = blogs.length
-                ? Math.max(...blogs.map(b => Number(b.id))) + 1
-                : 1;
+            // const blogs = await axios.get("/api/blog").then(res => res.data);
+            // const nextId = blogs.length
+            //     ? Math.max(...blogs.map(b => Number(b.id))) + 1
+            //     : 1;
 
             await axios.post("/api/blog", {
-                id: nextId,
                 title: data.title,
                 description: data.description,
                 image: base64Image

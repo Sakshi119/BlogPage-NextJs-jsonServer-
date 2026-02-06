@@ -1,0 +1,30 @@
+project id : utsziyiklslzadllckoc
+
+project url : https://utsziyiklslzadllckoc.supabase.co
+
+anon public key : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV0c3ppeWlrbHNsemFkbGxja29jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzNDkxNzksImV4cCI6MjA4NTkyNTE3OX0.MSHCBB-2wCnbsiZUpT0pQKM0sL6pzu1kzyfrJfw9CVU
+
+
+
+🧠 IMPORTANT: Why your deployed app was breaking
+
+Before we move on, understand this (this is key 🔑):
+
+❌ Your old code used:
+
+let blogs = []
+
+
+That works:
+
+locally
+
+only while server is running
+
+But on Netlify / Vercel:
+
+server restarts
+
+memory resets
+
+blogs disappear 😬
