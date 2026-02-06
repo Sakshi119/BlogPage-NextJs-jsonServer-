@@ -3,9 +3,10 @@ import Link from "next/link";
 export default async function BlogDetailsInner({ params }) {
   const { BlogDetails } = await params;
 
-  const res = await fetch("/api/blog", {
-    cache: "no-store",
-  });
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_SITE_URL}/api/blog`,
+    { cache: "no-store" }
+  );
 
   if (!res.ok) {
     throw new Error("Failed to fetch blogs");
@@ -16,7 +17,7 @@ export default async function BlogDetailsInner({ params }) {
   const found = allBlogs.find(
     (b) => String(b.id) === String(BlogDetails)
   );
-
+  console.log(found,"found");
   if (!found) {
     return <h1>❌ Blog Not Found</h1>;
   }
